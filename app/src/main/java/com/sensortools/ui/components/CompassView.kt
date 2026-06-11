@@ -5,6 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,6 +28,17 @@ fun CompassView(
     accuracy: Int = 0,
     modifier: Modifier = Modifier
 ) {
+    var smoothAzimuth by remember { mutableFloatStateOf(azimuth) }
+    var azimuthInitialized by remember { mutableStateOf(false) }
+    if (!azimuthInitialized) {
+        smoothAzimuth = azimuth
+        azimuthInitialized = true
+    } else {
+        val current = smoothAzimuth
+        val diff = ((azimuth - current + 540f) % 360f) - 180f
+        smoothAzimuth = (current + diff * 0.18f + 360f) % 360f
+    }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -34,7 +50,7 @@ fun CompassView(
         )
         Spacer(Modifier.height(16.dp))
 
-        val direction = getDirection(azimuth)
+        val direction = getDirection(smoothAzimuth)
 
         Box(
             modifier = Modifier.size(260.dp),
@@ -66,7 +82,7 @@ fun CompassView(
 
                 // 刻度线 + 文字标注
                 for (deg in 0 until 360 step 5) {
-                    val rotatedDeg = deg - azimuth.toInt()
+                    val rotatedDeg = deg - smoothAzimuth.toInt()
                     val rad = Math.toRadians(rotatedDeg.toDouble())
                     val cosA = cos(rad).toFloat()
                     val sinA = sin(rad).toFloat()
@@ -149,7 +165,7 @@ fun CompassView(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "${"%.1f".format(azimuth)}° ${direction.label}",
+            text = "${"%.1f".format(smoothAzimuth)}° ${direction.label}",
             style = MaterialTheme.typography.titleMedium.copy(fontFamily = FontFamily.Monospace),
             color = TextPrimary
         )

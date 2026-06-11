@@ -122,7 +122,11 @@ fun NavGraph() {
                     val repo = remember { SensorRepository(context) }
                     val sensorInfo = remember(sensorType) { repo.getAllSensors().find { it.type == sensorType } }
                     if (sensorInfo != null) {
-                        DetailScreen(sensorInfo = sensorInfo, onBack = { navController.popBackStack() })
+                        DetailScreen(
+                            sensorInfo = sensorInfo,
+                            onBack = { navController.popBackStack() },
+                            onRecord = { navController.navigate(Screen.Record.route) }
+                        )
                     }
                 }
 

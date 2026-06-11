@@ -243,6 +243,7 @@ fun ControlButtonRow(
     onStart: () -> Unit,
     onPause: () -> Unit,
     onResume: () -> Unit,
+    onRecord: (() -> Unit)? = null,
     onReset: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -282,6 +283,19 @@ fun ControlButtonRow(
                 Icon(Icons.Filled.Pause, null, tint = TextSecondary, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(6.dp))
                 Text("暂停", color = TextSecondary)
+            }
+        }
+
+        if (onRecord != null) {
+            OutlinedButton(
+                onClick = onRecord,
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(10.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, StatusError)
+            ) {
+                Icon(Icons.Filled.FiberManualRecord, null, tint = StatusError, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(6.dp))
+                Text("录制", color = StatusError)
             }
         }
 

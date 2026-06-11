@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.sensortools.data.model.SensorInfo
 import java.io.File
 import java.io.FileWriter
@@ -136,7 +137,37 @@ object ExportManager {
             type = mimeType
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(Intent.createChooser(intent, "分享数据"))
+    }
+
+    fun openExportDirectory(context: Context, file: File): Boolean {
+        val dir = file.parentFile ?: return false
+        return try {
+            val uri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                dir
+            )
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "resource/folder")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(Intent.createChooser(intent, "打开保存位置"))
+            true
+        } catch (_: Throwable) {
+            val fallback = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(dir.toUri(), "resource/folder")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            return try {
+                context.startActivity(Intent.createChooser(fallback, "打开保存位置"))
+                true
+            } catch (_: Throwable) {
+                false
+            }
+        }
     }
 }

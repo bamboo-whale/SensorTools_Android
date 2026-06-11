@@ -1,8 +1,8 @@
-# SensorTools / SensorTools_Android
+ï»¿# SensorTools / SensorTools_Android
 
 SensorTools is a Compose-based Android app for inspecting, monitoring, calibrating, and testing device sensors.
 
-SensorTools ÊÇÒ»¿î»ùÓÚ Jetpack Compose µÄ Android ´«¸ĞÆ÷¹¤¾ßÓ¦ÓÃ£¬ÓÃÓÚ²é¿´¡¢¼à²â¡¢Ğ£×¼ºÍ²âÊÔÉè±¸´«¸ĞÆ÷¡£
+SensorTools æ˜¯ä¸€æ¬¾åŸºäº Jetpack Compose çš„ Android ä¼ æ„Ÿå™¨å·¥å…·åº”ç”¨ï¼Œç”¨äºæŸ¥çœ‹ã€ç›‘æµ‹ã€æ ¡å‡†å’Œæµ‹è¯•è®¾å¤‡ä¼ æ„Ÿå™¨ã€‚
 
 It focuses on four things:
 - sensor discovery and categorization
@@ -10,13 +10,13 @@ It focuses on four things:
 - calibration workflows with explicit status feedback
 - health checking and result reporting
 
-ËüÖ÷Òª¹Ø×¢ËÄ¼şÊÂ£º
-- ´«¸ĞÆ÷·¢ÏÖÓë·ÖÀà
-- ÊµÊ±´«¸ĞÆ÷Êı¾İÔ¤ÀÀ
-- ´øÃ÷È·×´Ì¬·´À¡µÄĞ£×¼Á÷³Ì
-- ½¡¿µ¼ì²âÓë½á¹û»ã±¨
+å®ƒä¸»è¦å…³æ³¨å››ä»¶äº‹ï¼š
+- ä¼ æ„Ÿå™¨å‘ç°ä¸åˆ†ç±»
+- å®æ—¶ä¼ æ„Ÿå™¨æ•°æ®é¢„è§ˆ
+- å¸¦æ˜ç¡®çŠ¶æ€åé¦ˆçš„æ ¡å‡†æµç¨‹
+- å¥åº·æ£€æµ‹ä¸ç»“æœæ±‡æŠ¥
 
-## Highlights | ÁÁµã
+## Highlights | äº®ç‚¹
 
 - Friendly sensor categories on the home screen
 - Detail pages that show concrete sensor model/vendor information
@@ -24,13 +24,13 @@ It focuses on four things:
 - Calibration flows for accelerometer, gyroscope, and magnetometer
 - Material 3 dark UI with clear status colors
 
-- Ê×Ò³Ê¹ÓÃÓÑºÃµÄ´«¸ĞÆ÷·ÖÀà
-- ÏêÇéÒ³Õ¹Ê¾¾ßÌåĞÍºÅ¡¢³§ÉÌºÍ¼¼Êõ²ÎÊı
-- ½¡¿µÒ³²ÉÓÃÒÇ±íÅÌÊ½²¼¾Ö£¬²¢ÏÔÊ¾É¨Ãè×´Ì¬
-- Ö§³Ö¼ÓËÙ¶È¼Æ¡¢ÍÓÂİÒÇ¡¢´ÅÁ¦¼ÆĞ£×¼
-- Ê¹ÓÃ Material 3 ÉîÉ«Ö÷Ìâ£¬²¢ÓÃ×´Ì¬ÑÕÉ«Ç¿»¯·´À¡
+- é¦–é¡µä½¿ç”¨å‹å¥½çš„ä¼ æ„Ÿå™¨åˆ†ç±»
+- è¯¦æƒ…é¡µå±•ç¤ºå…·ä½“å‹å·ã€å‚å•†å’ŒæŠ€æœ¯å‚æ•°
+- å¥åº·é¡µé‡‡ç”¨ä»ªè¡¨ç›˜å¼å¸ƒå±€ï¼Œå¹¶æ˜¾ç¤ºæ‰«æçŠ¶æ€
+- æ”¯æŒåŠ é€Ÿåº¦è®¡ã€é™€èºä»ªã€ç£åŠ›è®¡æ ¡å‡†
+- ä½¿ç”¨ Material 3 æ·±è‰²ä¸»é¢˜ï¼Œå¹¶ç”¨çŠ¶æ€é¢œè‰²å¼ºåŒ–åé¦ˆ
 
-## Main Screens | Ö÷Òª½çÃæ
+## Main Screens | ä¸»è¦ç•Œé¢
 
 - Home: grouped sensor list with collapse/expand sections
 - Detail: real-time data and technical sensor details
@@ -40,15 +40,15 @@ It focuses on four things:
 - Settings: app preferences and behavior tuning
 - About: application information
 
-- Ê×Ò³£º°´Àà±ğ·Ö×éµÄ´«¸ĞÆ÷ÁĞ±í£¬Ö§³ÖÕÛµş/Õ¹¿ª
-- ÏêÇéÒ³£ºÊµÊ±Êı¾İºÍ´«¸ĞÆ÷¼¼ÊõĞÅÏ¢
-- Ğ£×¼Ò³£º´ø½ø¶ÈºÍ½á¹û×´Ì¬µÄĞ£×¼¿¨Æ¬
-- ½¡¿µÒ³£º´«¸ĞÆ÷½¡¿µÉ¨Ãè£¬Ìá¹©»ã×ÜºÍÏêÏ¸½á¹û
-- ¼ÇÂ¼Ò³£º´«¸ĞÆ÷Êı¾İ¼ÇÂ¼Óëµ¼³öÏà¹Ø¹¦ÄÜ
-- ÉèÖÃÒ³£ºÓ¦ÓÃÆ«ºÃÓëĞĞÎªÅäÖÃ
-- ¹ØÓÚÒ³£ºÓ¦ÓÃĞÅÏ¢Õ¹Ê¾
+- é¦–é¡µï¼šæŒ‰ç±»åˆ«åˆ†ç»„çš„ä¼ æ„Ÿå™¨åˆ—è¡¨ï¼Œæ”¯æŒæŠ˜å /å±•å¼€
+- è¯¦æƒ…é¡µï¼šå®æ—¶æ•°æ®å’Œä¼ æ„Ÿå™¨æŠ€æœ¯ä¿¡æ¯
+- æ ¡å‡†é¡µï¼šå¸¦è¿›åº¦å’Œç»“æœçŠ¶æ€çš„æ ¡å‡†å¡ç‰‡
+- å¥åº·é¡µï¼šä¼ æ„Ÿå™¨å¥åº·æ‰«æï¼Œæä¾›æ±‡æ€»å’Œè¯¦ç»†ç»“æœ
+- è®°å½•é¡µï¼šä¼ æ„Ÿå™¨æ•°æ®è®°å½•ä¸å¯¼å‡ºç›¸å…³åŠŸèƒ½
+- è®¾ç½®é¡µï¼šåº”ç”¨åå¥½ä¸è¡Œä¸ºé…ç½®
+- å…³äºé¡µï¼šåº”ç”¨ä¿¡æ¯å±•ç¤º
 
-## Tech Stack | ¼¼ÊõÕ»
+## Tech Stack | æŠ€æœ¯æ ˆ
 
 - Kotlin
 - Jetpack Compose
@@ -66,17 +66,17 @@ It focuses on four things:
 - Navigation Compose
 - SensorManager API
 - DataStore Preferences
-- Ğ­³Ì
+- åç¨‹
 
-## Requirements | »·¾³ÒªÇó
+## Requirements | ç¯å¢ƒè¦æ±‚
 
 - Android 8.0+ (`minSdk 26`)
 - A physical Android device or emulator with sensor support
 
-- Android 8.0 ¼°ÒÔÉÏ£¨`minSdk 26`£©
-- Ö§³Ö´«¸ĞÆ÷µÄÕæ»ú»òÄ£ÄâÆ÷
+- Android 8.0 åŠä»¥ä¸Šï¼ˆ`minSdk 26`ï¼‰
+- æ”¯æŒä¼ æ„Ÿå™¨çš„çœŸæœºæˆ–æ¨¡æ‹Ÿå™¨
 
-## Build and Run | ¹¹½¨ÓëÔËĞĞ
+## Build and Run | æ„å»ºä¸è¿è¡Œ
 
 ```bash
 ./gradlew assembleDebug
@@ -88,19 +88,19 @@ Install the debug APK:
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-¹¹½¨µ÷ÊÔ°æ APK£º
+æ„å»ºè°ƒè¯•ç‰ˆ APKï¼š
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-°²×°µ÷ÊÔ°æ APK£º
+å®‰è£…è°ƒè¯•ç‰ˆ APKï¼š
 
 ```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## Project Structure | ÏîÄ¿½á¹¹
+## Project Structure | é¡¹ç›®ç»“æ„
 
 - `app/src/main/java/com/sensortools/data`: models, repositories, local storage, and service layer
 - `app/src/main/java/com/sensortools/domain`: sensor analysis and classification rules
@@ -108,24 +108,24 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 - `app/src/main/java/com/sensortools/util`: helper utilities such as motion detection and export logic
 - `app/src/main/res`: UI resources, icons, and theme assets
 
-- `app/src/main/java/com/sensortools/data`£ºÊı¾İÄ£ĞÍ¡¢²Ö¿â¡¢±¾µØ´æ´¢ºÍ·şÎñ²ã
-- `app/src/main/java/com/sensortools/domain`£º´«¸ĞÆ÷·ÖÎöÓë·ÖÀà¹æÔò
-- `app/src/main/java/com/sensortools/ui`£ºCompose ½çÃæ¡¢ViewModel¡¢µ¼º½ÓëÍ¨ÓÃ UI ×é¼ş
-- `app/src/main/java/com/sensortools/util`£ºÔË¶¯¼ì²â¡¢µ¼³öµÈ¸¨Öú¹¤¾ß
-- `app/src/main/res`£º×ÊÔ´ÎÄ¼ş¡¢Í¼±êÓëÖ÷Ìâ×Ê²ú
+- `app/src/main/java/com/sensortools/data`ï¼šæ•°æ®æ¨¡å‹ã€ä»“åº“ã€æœ¬åœ°å­˜å‚¨å’ŒæœåŠ¡å±‚
+- `app/src/main/java/com/sensortools/domain`ï¼šä¼ æ„Ÿå™¨åˆ†æä¸åˆ†ç±»è§„åˆ™
+- `app/src/main/java/com/sensortools/ui`ï¼šCompose ç•Œé¢ã€ViewModelã€å¯¼èˆªä¸é€šç”¨ UI ç»„ä»¶
+- `app/src/main/java/com/sensortools/util`ï¼šè¿åŠ¨æ£€æµ‹ã€å¯¼å‡ºç­‰è¾…åŠ©å·¥å…·
+- `app/src/main/res`ï¼šèµ„æºæ–‡ä»¶ã€å›¾æ ‡ä¸ä¸»é¢˜èµ„äº§
 
-## Notes | ËµÃ÷
+## Notes | è¯´æ˜
 
 - The app is optimized for real-device sensor testing.
 - Some sensors may be unavailable on certain phones. The UI shows explicit unavailable or no-data states instead of failing silently.
 - The health and calibration pages were designed to surface progress and error reasons clearly.
 
-- ±¾Ó¦ÓÃ¸üÊÊºÏÕæ»ú´«¸ĞÆ÷²âÊÔ¡£
-- Ä³Ğ©ÊÖ»ú¿ÉÄÜ²»Ö§³Ö²¿·Ö´«¸ĞÆ÷£¬½çÃæ»áÃ÷È·ÏÔÊ¾²»¿ÉÓÃ»òÎŞÊı¾İ×´Ì¬£¬²»»á¾²Ä¬Ê§°Ü¡£
-- ½¡¿µÒ³ºÍĞ£×¼Ò³¶¼Ç¿µ÷½ø¶È·´À¡Óë´íÎóÔ­ÒòÕ¹Ê¾¡£
+- æœ¬åº”ç”¨æ›´é€‚åˆçœŸæœºä¼ æ„Ÿå™¨æµ‹è¯•ã€‚
+- æŸäº›æ‰‹æœºå¯èƒ½ä¸æ”¯æŒéƒ¨åˆ†ä¼ æ„Ÿå™¨ï¼Œç•Œé¢ä¼šæ˜ç¡®æ˜¾ç¤ºä¸å¯ç”¨æˆ–æ— æ•°æ®çŠ¶æ€ï¼Œä¸ä¼šé™é»˜å¤±è´¥ã€‚
+- å¥åº·é¡µå’Œæ ¡å‡†é¡µéƒ½å¼ºè°ƒè¿›åº¦åé¦ˆä¸é”™è¯¯åŸå› å±•ç¤ºã€‚
 
-## Screenshots | ½ØÍ¼
+## Screenshots | æˆªå›¾
 
 Add screenshots in the repository root or a `docs/` folder and link them here for the GitHub landing page.
 
-½¨Òé½«½ØÍ¼·ÅÔÚ²Ö¿â¸ùÄ¿Â¼»ò `docs/` Ä¿Â¼ÖĞ£¬ÔÙÔÚÕâÀïÌí¼ÓÁ´½Ó£¬±ãÓÚ GitHub Ê×Ò³Õ¹Ê¾¡£
+å»ºè®®å°†æˆªå›¾æ”¾åœ¨ä»“åº“æ ¹ç›®å½•æˆ– `docs/` ç›®å½•ä¸­ï¼Œå†åœ¨è¿™é‡Œæ·»åŠ é“¾æ¥ï¼Œä¾¿äº GitHub é¦–é¡µå±•ç¤ºã€‚

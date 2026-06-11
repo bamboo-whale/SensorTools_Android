@@ -1,20 +1,13 @@
-# Release Artifacts | 发布产物
+# 发布产物
 
-This folder contains APK builds that can be downloaded directly from the repository.
+本目录包含可以直接从仓库下载的 APK 文件。
 
-本目录包含可直接从仓库下载的 APK 构建产物。
+## 文件
 
-## Files | 文件
+- `SensorTools-release.apk`：正式签名版本，适合安装到手机上测试和演示
 
-- `SensorTools-debug.apk`: latest debug build for local device testing
+## 说明
 
-- `SensorTools-debug.apk`：最新调试包，适合本地真机测试
-
-## Notes | 说明
-
-- This APK is intended for testing and demo use.
-- Rebuild the project before publishing a new release.
-
-- 该 APK 主要用于测试和演示。
-- 发布新版本前，请先重新构建项目。
+- 该 APK 已使用发布证书签名。
+- 如果后续重新构建，请覆盖本目录中的 APK 文件并重新提交。
 

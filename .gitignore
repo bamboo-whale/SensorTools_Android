@@ -6,3 +6,5 @@ app/build/
 .reasonix/
 *.iml
 local.properties
+keystore.properties
+release-keystore.jks

@@ -7,6 +7,20 @@ android {
     namespace = "com.sensortools"
     compileSdk = 34
 
+    signingConfigs {
+        create("release") {
+            val storeFilePath = (project.findProperty("RELEASE_STORE_FILE") as String?)
+            val storePasswordValue = (project.findProperty("RELEASE_STORE_PASSWORD") as String?)
+            val keyAliasValue = (project.findProperty("RELEASE_KEY_ALIAS") as String?)
+            val keyPasswordValue = (project.findProperty("RELEASE_KEY_PASSWORD") as String?)
+
+            if (!storeFilePath.isNullOrBlank()) storeFile = rootProject.file(storeFilePath)
+            if (!storePasswordValue.isNullOrBlank()) storePassword = storePasswordValue
+            if (!keyAliasValue.isNullOrBlank()) keyAlias = keyAliasValue
+            if (!keyPasswordValue.isNullOrBlank()) keyPassword = keyPasswordValue
+        }
+    }
+
     defaultConfig {
         applicationId = "com.sensortools"
         minSdk = 26
@@ -22,6 +36,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

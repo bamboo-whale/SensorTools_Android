@@ -41,7 +41,6 @@ fun HomeScreen(
     val unknownSensors by viewModel.unknownSensors.collectAsState()
     val deviceInfo by viewModel.deviceInfo.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    var showUnknownGroup by remember { mutableStateOf(false) }
     val groupedSensors = remember(commonSensors, unknownSensors) {
         buildSensorGroups(commonSensors + unknownSensors)
     }
@@ -122,11 +121,11 @@ fun HomeScreen(
                         colors = CardDefaults.cardColors(containerColor = CardBackground),
                         border = androidx.compose.foundation.BorderStroke(1.dp, Border)
                     ) {
-                        Column {
-                            group.sensors.forEachIndexed { index, sensor ->
-                                SensorSummaryRow(
-                                    sensor = sensor,
-                                    onClick = { onSensorClick(sensor) }
+                    Column {
+                        group.sensors.forEachIndexed { index, sensor ->
+                            SensorSummaryRow(
+                                sensor = sensor,
+                                onClick = { onSensorClick(sensor) }
                                 )
                                 if (index < group.sensors.lastIndex) {
                                     HorizontalDivider(color = Border)
@@ -135,15 +134,13 @@ fun HomeScreen(
                         }
                     }
                 }
-                if (group.subtitle.isNotBlank()) {
-                    item {
-                        Text(
-                            group.subtitle,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TextTertiary,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                        )
-                    }
+                item {
+                    Text(
+                        group.subtitle,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextTertiary,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                    )
                 }
             }
         }
@@ -215,20 +212,11 @@ private fun SensorSummaryRow(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                if (sensor.isWakeUp) "唤醒" else "常规",
-                style = MaterialTheme.typography.labelSmall,
-                color = if (sensor.isWakeUp) StatusWarning else TextTertiary
-            )
-            Text(
-                sensor.vendor,
-                style = MaterialTheme.typography.labelSmall,
-                color = TextTertiary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        Text(
+            if (sensor.isWakeUp) "唤醒" else "常规",
+            style = MaterialTheme.typography.labelSmall,
+            color = if (sensor.isWakeUp) StatusWarning else TextTertiary
+        )
         Spacer(Modifier.width(8.dp))
         Icon(Icons.Filled.ChevronRight, null, tint = TextTertiary, modifier = Modifier.size(18.dp))
     }

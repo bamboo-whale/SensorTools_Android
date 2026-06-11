@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sensortools.data.model.SensorInfo
+import com.sensortools.ui.components.getSensorColor
+import com.sensortools.ui.components.getSensorIcon
 import com.sensortools.ui.components.*
 import com.sensortools.ui.theme.*
 import com.sensortools.util.MotionDetector
@@ -68,7 +70,7 @@ fun DetailScreen(
                 Icon(Icons.Filled.ArrowBack, "返回", tint = TextPrimary)
             }
             Text(
-                sensorInfo.name,
+                friendlySensorTitle(sensorInfo),
                 style = MaterialTheme.typography.titleLarge,
                 color = TextPrimary,
                 modifier = Modifier.weight(1f)
@@ -86,12 +88,32 @@ fun DetailScreen(
                 border = androidx.compose.foundation.BorderStroke(1.dp, Border)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(46.dp)
+                                .background(getSensorColor(sensorInfo.type).copy(alpha = 0.14f), RoundedCornerShape(12.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = getSensorIcon(sensorInfo.type),
+                                contentDescription = null,
+                                tint = getSensorColor(sensorInfo.type),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(sensorInfo.typeName, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
+                            Text(sensorInfo.name, style = MaterialTheme.typography.bodySmall, color = TextTertiary)
+                        }
+                    }
+                    Spacer(Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(sensorInfo.typeName, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
                         StatusBadge(
                             text = if (isRunning && !isPaused) "监听中" else if (isPaused) "已暂停" else "已停止",
                             status = if (isRunning) com.sensortools.domain.HealthAnalyzer.HealthStatus.NORMAL
@@ -269,4 +291,17 @@ private fun MiniStat(label: String, value: String, color: androidx.compose.ui.gr
             color = color
         )
     }
+}
+
+private fun friendlySensorTitle(sensorInfo: SensorInfo): String = when (sensorInfo.type) {
+    android.hardware.Sensor.TYPE_ACCELEROMETER -> "加速度计详情"
+    android.hardware.Sensor.TYPE_GYROSCOPE -> "陀螺仪详情"
+    android.hardware.Sensor.TYPE_MAGNETIC_FIELD -> "磁力计详情"
+    android.hardware.Sensor.TYPE_LIGHT -> "光线传感器详情"
+    android.hardware.Sensor.TYPE_PROXIMITY -> "距离传感器详情"
+    android.hardware.Sensor.TYPE_PRESSURE -> "气压计详情"
+    android.hardware.Sensor.TYPE_STEP_COUNTER -> "步数统计详情"
+    android.hardware.Sensor.TYPE_STEP_DETECTOR -> "步数检测详情"
+    android.hardware.Sensor.TYPE_HEART_RATE -> "心率传感器详情"
+    else -> "${sensorInfo.typeName}详情"
 }

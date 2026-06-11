@@ -49,6 +49,12 @@ SensorTools 是一款基于 Jetpack Compose 的 Android 传感器工具应用，
 ./gradlew assembleDebug
 ```
 
+### 编译发布包
+
+```bash
+./gradlew assembleRelease
+```
+
 ### 安装到已连接手机
 
 ```bash

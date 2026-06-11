@@ -1,6 +1,13 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+fun loadKeystoreProperty(name: String): String? {
+    return project.findProperty(name) as String?
 }
 
 android {
@@ -9,10 +16,10 @@ android {
 
     signingConfigs {
         create("release") {
-            val storeFilePath = (project.findProperty("RELEASE_STORE_FILE") as String?)
-            val storePasswordValue = (project.findProperty("RELEASE_STORE_PASSWORD") as String?)
-            val keyAliasValue = (project.findProperty("RELEASE_KEY_ALIAS") as String?)
-            val keyPasswordValue = (project.findProperty("RELEASE_KEY_PASSWORD") as String?)
+            val storeFilePath = loadKeystoreProperty("storeFile")
+            val storePasswordValue = loadKeystoreProperty("storePassword")
+            val keyAliasValue = loadKeystoreProperty("keyAlias")
+            val keyPasswordValue = loadKeystoreProperty("keyPassword")
 
             if (!storeFilePath.isNullOrBlank()) storeFile = rootProject.file(storeFilePath)
             if (!storePasswordValue.isNullOrBlank()) storePassword = storePasswordValue

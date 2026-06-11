@@ -68,7 +68,7 @@ fun SensorCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = sensor.name,
+                    text = friendlySensorLabel(sensor),
                     style = MaterialTheme.typography.titleMedium,
                     color = TextPrimary,
                     maxLines = 1,
@@ -91,6 +91,29 @@ fun SensorCard(
             )
         }
     }
+}
+
+private fun friendlySensorLabel(sensor: SensorInfo): String = when (sensor.type) {
+    android.hardware.Sensor.TYPE_ACCELEROMETER -> "加速度计"
+    android.hardware.Sensor.TYPE_ACCELEROMETER_UNCALIBRATED -> "未校准加速度计"
+    android.hardware.Sensor.TYPE_LINEAR_ACCELERATION -> "线性加速度"
+    android.hardware.Sensor.TYPE_GRAVITY -> "重力传感器"
+    android.hardware.Sensor.TYPE_GYROSCOPE -> "陀螺仪"
+    android.hardware.Sensor.TYPE_GYROSCOPE_UNCALIBRATED -> "未校准陀螺仪"
+    android.hardware.Sensor.TYPE_MAGNETIC_FIELD -> "磁力计"
+    android.hardware.Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED -> "未校准磁力计"
+    android.hardware.Sensor.TYPE_ROTATION_VECTOR -> "旋转矢量"
+    android.hardware.Sensor.TYPE_GAME_ROTATION_VECTOR -> "游戏旋转矢量"
+    android.hardware.Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> "地磁旋转矢量"
+    android.hardware.Sensor.TYPE_LIGHT -> "光线传感器"
+    android.hardware.Sensor.TYPE_PROXIMITY -> "距离传感器"
+    android.hardware.Sensor.TYPE_PRESSURE -> "气压计"
+    android.hardware.Sensor.TYPE_STEP_COUNTER -> "步数统计"
+    android.hardware.Sensor.TYPE_STEP_DETECTOR -> "步数检测"
+    android.hardware.Sensor.TYPE_HEART_RATE -> "心率传感器"
+    android.hardware.Sensor.TYPE_AMBIENT_TEMPERATURE -> "环境温度"
+    android.hardware.Sensor.TYPE_RELATIVE_HUMIDITY -> "相对湿度"
+    else -> sensor.typeName.ifBlank { "传感器" }
 }
 
 // ── 设备信息卡片 ──

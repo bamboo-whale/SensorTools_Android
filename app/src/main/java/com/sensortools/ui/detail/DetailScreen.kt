@@ -104,8 +104,11 @@ fun DetailScreen(
                         }
                         Spacer(Modifier.width(12.dp))
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(sensorInfo.typeName, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
-                            Text(sensorInfo.name, style = MaterialTheme.typography.bodySmall, color = TextTertiary)
+                            Text(friendlySensorTitle(sensorInfo), style = MaterialTheme.typography.titleMedium, color = TextPrimary)
+                            Text(sensorInfo.typeName, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                            if (sensorInfo.name.isNotBlank() && sensorInfo.name != sensorInfo.typeName) {
+                                Text(sensorInfo.name, style = MaterialTheme.typography.bodySmall, color = TextTertiary)
+                            }
                         }
                     }
                     Spacer(Modifier.height(12.dp))
@@ -118,6 +121,12 @@ fun DetailScreen(
                             text = if (isRunning && !isPaused) "监听中" else if (isPaused) "已暂停" else "已停止",
                             status = if (isRunning) com.sensortools.domain.HealthAnalyzer.HealthStatus.NORMAL
                                      else com.sensortools.domain.HealthAnalyzer.HealthStatus.NO_DATA
+                        )
+                        Text(
+                            if (sensorInfo.isAvailable) "可用" else "不可用",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (sensorInfo.isAvailable) StatusNormal else StatusError,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                     Spacer(Modifier.height(12.dp))

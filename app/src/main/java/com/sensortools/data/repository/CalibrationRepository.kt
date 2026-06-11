@@ -15,6 +15,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class CalibrationRepository(private val context: Context) {
 
@@ -46,7 +47,10 @@ class CalibrationRepository(private val context: Context) {
 
     fun observeMagnetometerCalibration(): Flow<CalibrationData> = callbackFlow {
         val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-        if (sensor == null) { close(); return@callbackFlow }
+        if (sensor == null) {
+            close(IllegalStateException("当前设备不支持磁力计"))
+            return@callbackFlow
+        }
         var minX = Float.MAX_VALUE; var maxX = Float.MIN_VALUE
         var minY = Float.MAX_VALUE; var maxY = Float.MIN_VALUE
         var minZ = Float.MAX_VALUE; var maxZ = Float.MIN_VALUE
@@ -79,7 +83,7 @@ class CalibrationRepository(private val context: Context) {
     ): List<SensorData> = suspendCancellableCoroutine { cont ->
         val sensor = sensorManager.getDefaultSensor(sensorType)
         if (sensor == null) {
-            cont.resume(emptyList())
+            cont.resumeWithException(IllegalStateException("当前设备不支持该传感器"))
             return@suspendCancellableCoroutine
         }
 

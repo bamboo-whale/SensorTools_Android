@@ -1,27 +1,26 @@
 package com.sensortools.ui.calibration
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Explore
-import androidx.compose.material.icons.filled.HealthAndSafety
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Speed
@@ -32,7 +31,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,7 +54,6 @@ import com.sensortools.ui.theme.StatusWarning
 import com.sensortools.ui.theme.TextPrimary
 import com.sensortools.ui.theme.TextSecondary
 import com.sensortools.ui.theme.TextTertiary
-import androidx.compose.foundation.BorderStroke
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -98,7 +95,7 @@ fun CalibrationScreen(
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("校准总览", style = MaterialTheme.typography.titleMedium, color = TextPrimary)
                 Text(
-                    statusMessage ?: "选择一个传感器开始校准，采集期间请保持设备稳定或按提示移动设备。",
+                    statusMessage ?: "选择一个传感器开始校准。加速度计和陀螺仪会采集一段稳定样本，磁力计需要你手持设备画 8 字。",
                     style = MaterialTheme.typography.bodySmall,
                     color = if (statusMessage == null) TextSecondary else TextTertiary
                 )
@@ -118,8 +115,8 @@ fun CalibrationScreen(
         CalibrationCard(
             title = "加速度计校准",
             icon = Icons.Filled.Speed,
-            description = "将设备水平静置于桌面，点击开始校准。",
-            isCalibrating = accelCalibrating,
+            description = "将设备平放在桌面，点击开始后保持静止。",
+            isRunning = accelCalibrating,
             progress = accelProgress,
             progressMax = 100,
             calibration = accelCalibration,
@@ -129,8 +126,8 @@ fun CalibrationScreen(
         CalibrationCard(
             title = "陀螺仪校准",
             icon = Icons.Filled.Autorenew,
-            description = "保持设备完全静止，点击开始校准采集零偏。",
-            isCalibrating = gyroCalibrating,
+            description = "保持设备完全静止，采集零偏样本。",
+            isRunning = gyroCalibrating,
             progress = gyroProgress,
             progressMax = 200,
             calibration = gyroCalibration,
@@ -156,7 +153,7 @@ fun CalibrationScreen(
                     Spacer(Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text("磁力计校准", style = MaterialTheme.typography.titleMedium, color = TextPrimary)
-                        Text("手持设备在空中画 8 字，覆盖各个方向。", style = MaterialTheme.typography.bodySmall, color = TextTertiary)
+                        Text("手持设备在空中画 8 字，覆盖多个方向。", style = MaterialTheme.typography.bodySmall, color = TextTertiary)
                     }
                 }
 
@@ -168,8 +165,11 @@ fun CalibrationScreen(
                     color = if (quality > 0.85f) StatusNormal else StatusWarning
                 )
 
-                if (magCalibration?.isComplete == true) {
-                    Text("校准完成", color = StatusNormal, style = MaterialTheme.typography.bodyMedium)
+                when {
+                    magObserving -> Text("正在采集磁场变化，持续移动设备", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
+                    magCalibration?.isComplete == true -> Text("磁力计校准已完成", color = StatusNormal, style = MaterialTheme.typography.bodyMedium)
+                    magCalibration != null -> Text("校准已开始，但尚未完成", color = StatusWarning, style = MaterialTheme.typography.bodyMedium)
+                    else -> Text("尚未开始", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
                 }
 
                 if (!magObserving) {
@@ -235,7 +235,7 @@ private fun CalibrationCard(
     title: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     description: String,
-    isCalibrating: Boolean,
+    isRunning: Boolean,
     progress: Int,
     progressMax: Int,
     calibration: com.sensortools.data.model.CalibrationData?,
@@ -265,7 +265,7 @@ private fun CalibrationCard(
             }
 
             when {
-                isCalibrating -> {
+                isRunning -> {
                     LinearProgressIndicator(
                         progress = progress.toFloat() / progressMax,
                         modifier = Modifier.fillMaxWidth(),
@@ -284,6 +284,7 @@ private fun CalibrationCard(
                 }
                 calibration != null -> {
                     Text("校准未完成", style = MaterialTheme.typography.bodyMedium, color = StatusWarning)
+                    Text("这不是卡死，通常是样本不足、超时或设备不支持。", style = MaterialTheme.typography.bodySmall, color = TextTertiary)
                 }
                 else -> {
                     Text("尚未开始", style = MaterialTheme.typography.bodyMedium, color = TextSecondary)

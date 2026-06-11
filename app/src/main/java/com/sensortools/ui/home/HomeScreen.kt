@@ -21,8 +21,6 @@ import com.sensortools.data.model.SensorInfo
 import com.sensortools.ui.components.DeviceInfoCard
 import com.sensortools.ui.components.getSensorColor
 import com.sensortools.ui.components.getSensorIcon
-import com.sensortools.ui.components.SectionTitle
-import com.sensortools.ui.components.SensorCard
 import com.sensortools.ui.theme.*
 
 private data class SensorGroup(
@@ -43,6 +41,11 @@ fun HomeScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val groupedSensors = remember(commonSensors, unknownSensors) {
         buildSensorGroups(commonSensors + unknownSensors)
+    }
+    val expandedGroups = remember(groupedSensors) {
+        mutableStateMapOf<String, Boolean>().apply {
+            groupedSensors.forEach { group -> put(group.title, true) }
+        }
     }
 
     LazyColumn(
@@ -103,44 +106,36 @@ fun HomeScreen(
         if (!isLoading) {
             groupedSensors.forEach { group ->
                 item {
-                    SectionTitle(
-                        title = group.title,
-                        trailing = {
-                            Text(
-                                "${group.sensors.size} 个",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = TextTertiary
-                            )
-                        }
-                    )
-                }
-                item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = CardBackground),
                         border = androidx.compose.foundation.BorderStroke(1.dp, Border)
                     ) {
-                    Column {
-                        group.sensors.forEachIndexed { index, sensor ->
-                            SensorSummaryRow(
-                                sensor = sensor,
-                                onClick = { onSensorClick(sensor) }
-                                )
-                                if (index < group.sensors.lastIndex) {
-                                    HorizontalDivider(color = Border)
+                        Column {
+                            GroupHeaderRow(
+                                title = group.title,
+                                subtitle = group.subtitle,
+                                count = group.sensors.size,
+                                icon = categoryIcon(group.title),
+                                expanded = expandedGroups[group.title] ?: true,
+                                onToggle = { expandedGroups[group.title] = !(expandedGroups[group.title] ?: true) }
+                            )
+                            AnimatedVisibility(visible = expandedGroups[group.title] ?: true) {
+                                Column {
+                                    group.sensors.forEachIndexed { index, sensor ->
+                                        SensorSummaryRow(
+                                            sensor = sensor,
+                                            onClick = { onSensorClick(sensor) }
+                                        )
+                                        if (index < group.sensors.lastIndex) {
+                                            HorizontalDivider(color = Border)
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                item {
-                    Text(
-                        group.subtitle,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextTertiary,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                    )
                 }
             }
         }
@@ -156,6 +151,63 @@ fun HomeScreen(
 
         // 底部留白
         item { Spacer(Modifier.height(80.dp)) }
+    }
+}
+
+@Composable
+private fun GroupHeaderRow(
+    title: String,
+    subtitle: String,
+    count: Int,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    expanded: Boolean,
+    onToggle: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onToggle)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .background(TextPrimary.copy(alpha = 0.08f), RoundedCornerShape(10.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, contentDescription = null, tint = TextPrimary, modifier = Modifier.size(20.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = TextPrimary,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "($count)",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextTertiary
+                )
+            }
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = TextTertiary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Icon(
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = null,
+            tint = TextTertiary
+        )
     }
 }
 
@@ -308,4 +360,11 @@ private fun sensorCategoryLabel(sensor: SensorInfo): String = when (sensor.type)
     android.hardware.Sensor.TYPE_STEP_DETECTOR,
     android.hardware.Sensor.TYPE_HEART_RATE -> "人体与计步"
     else -> "其他传感器"
+}
+
+private fun categoryIcon(title: String) = when (title) {
+    "运动与姿态" -> Icons.Filled.DirectionsRun
+    "环境感知" -> Icons.Filled.Cloud
+    "人体与计步" -> Icons.Filled.DirectionsWalk
+    else -> Icons.Filled.Sensors
 }

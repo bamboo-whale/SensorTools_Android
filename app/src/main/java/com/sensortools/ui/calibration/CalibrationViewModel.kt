@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.sensortools.data.model.CalibrationData
 import com.sensortools.data.repository.CalibrationRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +43,8 @@ class CalibrationViewModel(application: Application) : AndroidViewModel(applicat
     private val _statusMessage = MutableStateFlow<String?>(null)
     val statusMessage: StateFlow<String?> = _statusMessage.asStateFlow()
 
+    private var magJob: Job? = null
+
     init {
         loadSaved()
     }
@@ -65,7 +68,7 @@ class CalibrationViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }.getOrElse { throwable ->
                 _statusMessage.value = throwable.message ?: "加速度计校准失败"
-                CalibrationData(Sensor.TYPE_ACCELEROMETER, quality = 0f)
+                CalibrationData(Sensor.TYPE_ACCELEROMETER, quality = 0f, isComplete = false)
             }
             _accelCalibration.value = result
             _accelCalibrating.value = false
@@ -86,7 +89,7 @@ class CalibrationViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }.getOrElse { throwable ->
                 _statusMessage.value = throwable.message ?: "陀螺仪校准失败"
-                CalibrationData(Sensor.TYPE_GYROSCOPE, quality = 0f)
+                CalibrationData(Sensor.TYPE_GYROSCOPE, quality = 0f, isComplete = false)
             }
             _gyroCalibration.value = result
             _gyroCalibrating.value = false
@@ -97,9 +100,10 @@ class CalibrationViewModel(application: Application) : AndroidViewModel(applicat
     fun startMagCalibration() {
         if (_magObserving.value) return
         _magObserving.value = true
-        _statusMessage.value = "请移动手机画 8 字，正在观察磁力计变化"
+        _statusMessage.value = "请移动设备画 8 字，正在观察磁场变化"
 
-        viewModelScope.launch {
+        magJob?.cancel()
+        magJob = viewModelScope.launch {
             try {
                 repository.observeMagnetometerCalibration().collect { data ->
                     _magCalibration.value = data
@@ -116,6 +120,8 @@ class CalibrationViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun stopMagCalibration() {
+        magJob?.cancel()
+        magJob = null
         _magObserving.value = false
         _statusMessage.value = "已停止磁力计校准"
     }

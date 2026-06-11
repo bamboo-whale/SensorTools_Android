@@ -44,7 +44,7 @@ fun HomeScreen(
     }
     val expandedGroups = remember(groupedSensors) {
         mutableStateMapOf<String, Boolean>().apply {
-            groupedSensors.forEach { group -> put(group.title, false) }
+            groupedSensors.forEach { group -> put(group.title, true) }
         }
     }
 
@@ -119,9 +119,9 @@ fun HomeScreen(
                                 count = group.sensors.size,
                                 icon = categoryIcon(group.title),
                                 expanded = expandedGroups[group.title] ?: true,
-                                onToggle = { expandedGroups[group.title] = !(expandedGroups[group.title] ?: false) }
+                                onToggle = { expandedGroups[group.title] = !(expandedGroups[group.title] ?: true) }
                             )
-                            AnimatedVisibility(visible = expandedGroups[group.title] ?: false) {
+                            AnimatedVisibility(visible = expandedGroups[group.title] ?: true) {
                                 Column {
                                     group.sensors.forEachIndexed { index, sensor ->
                                         SensorSummaryRow(

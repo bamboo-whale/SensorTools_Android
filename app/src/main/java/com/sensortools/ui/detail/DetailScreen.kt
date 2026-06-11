@@ -28,7 +28,6 @@ import com.sensortools.util.MotionDetector
 fun DetailScreen(
     sensorInfo: SensorInfo,
     onBack: () -> Unit,
-    onRecord: () -> Unit = {},
     viewModel: DetailViewModel = viewModel()
 ) {
     val data by viewModel.data.collectAsState()
@@ -138,7 +137,7 @@ fun DetailScreen(
                     }
                     Spacer(Modifier.height(6.dp))
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        InfoChip("分辨率", "%.2f".format(sensorInfo.resolution))
+                        InfoChip("分辨率", "%.4f".format(sensorInfo.resolution))
                         InfoChip("最大量程", "%.1f".format(sensorInfo.maxRange))
                         InfoChip("最小延迟", "${sensorInfo.minDelay} μs")
                     }
@@ -157,9 +156,9 @@ fun DetailScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            ValueDisplay("X 轴", "%.2f".format(stats.currentX), ChartAxisX)
-                            ValueDisplay("Y 轴", "%.2f".format(stats.currentY), ChartAxisY)
-                            ValueDisplay("Z 轴", "%.2f".format(stats.currentZ), ChartAxisZ)
+                            ValueDisplay("X 轴", "%.3f".format(stats.currentX), ChartAxisX)
+                            ValueDisplay("Y 轴", "%.3f".format(stats.currentY), ChartAxisY)
+                            ValueDisplay("Z 轴", "%.3f".format(stats.currentZ), ChartAxisZ)
                         }
                         Spacer(Modifier.height(12.dp))
                         Row(
@@ -204,32 +203,12 @@ fun DetailScreen(
                         Text("极值统计", style = MaterialTheme.typography.labelLarge, color = TextSecondary)
                         Spacer(Modifier.height(8.dp))
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            MiniStat("X Min", "%.2f".format(stats.minX), ChartAxisX)
-                            MiniStat("X Max", "%.2f".format(stats.maxX), ChartAxisX)
-                            MiniStat("Y Min", "%.2f".format(stats.minY), ChartAxisY)
-                            MiniStat("Y Max", "%.2f".format(stats.maxY), ChartAxisY)
-                            MiniStat("Z Min", "%.2f".format(stats.minZ), ChartAxisZ)
-                            MiniStat("Z Max", "%.2f".format(stats.maxZ), ChartAxisZ)
-                        }
-                    }
-                }
-
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBackground),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Border)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text("均值统计", style = MaterialTheme.typography.labelLarge, color = TextSecondary)
-                        Spacer(Modifier.height(8.dp))
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            MiniStat("X Avg", "%.2f".format(stats.meanX), ChartAxisX)
-                            MiniStat("Y Avg", "%.2f".format(stats.meanY), ChartAxisY)
-                            MiniStat("Z Avg", "%.2f".format(stats.meanZ), ChartAxisZ)
-                            Spacer(Modifier.width(0.dp))
-                            Spacer(Modifier.width(0.dp))
-                            Spacer(Modifier.width(0.dp))
+                            MiniStat("X Min", "%.3f".format(stats.minX), ChartAxisX)
+                            MiniStat("X Max", "%.3f".format(stats.maxX), ChartAxisX)
+                            MiniStat("Y Min", "%.3f".format(stats.minY), ChartAxisY)
+                            MiniStat("Y Max", "%.3f".format(stats.maxY), ChartAxisY)
+                            MiniStat("Z Min", "%.3f".format(stats.minZ), ChartAxisZ)
+                            MiniStat("Z Max", "%.3f".format(stats.maxZ), ChartAxisZ)
                         }
                     }
                 }
@@ -295,7 +274,6 @@ fun DetailScreen(
                 onStart = { viewModel.startListening() },
                 onPause = { viewModel.pauseListening() },
                 onResume = { viewModel.resumeListening() },
-                onRecord = onRecord,
                 onReset = { viewModel.reset() }
             )
 

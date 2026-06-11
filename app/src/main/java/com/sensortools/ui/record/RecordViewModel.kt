@@ -10,7 +10,6 @@ import com.sensortools.data.model.SensorInfo
 import com.sensortools.data.repository.SensorRepository
 import com.sensortools.data.service.SensorRecordingService
 import com.sensortools.util.ExportManager
-import com.sensortools.data.model.SensorData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -39,24 +38,10 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
     private val _countdown = MutableStateFlow(0)
     val countdown: StateFlow<Int> = _countdown.asStateFlow()
 
-    private val _listeningSensor = MutableStateFlow<SensorInfo?>(null)
-    val listeningSensor: StateFlow<SensorInfo?> = _listeningSensor.asStateFlow()
-
-    private val _listeningData = MutableStateFlow<List<SensorData>>(emptyList())
-    val listeningData: StateFlow<List<SensorData>> = _listeningData.asStateFlow()
-
-    private val _listeningIsRunning = MutableStateFlow(false)
-    val listeningIsRunning: StateFlow<Boolean> = _listeningIsRunning.asStateFlow()
-
-    private val _listeningStatus = MutableStateFlow("未监听")
-    val listeningStatus: StateFlow<String> = _listeningStatus.asStateFlow()
-
     private val allRecords = mutableListOf<ExportManager.ExportRecord>()
     private var startTime = 0L
     private var activeSensor: SensorInfo? = null
     private var lastAnnotation = ""
-    private var listenJob: kotlinx.coroutines.Job? = null
-    private var selectedListeningSensor: SensorInfo? = null
 
     init {
         _sensors.value = repository.getAllSensors()
@@ -73,40 +58,6 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
             _recordCount.value = allRecords.size
             _isRecording.value = false
         }
-    }
-
-    fun selectSensor(sensor: SensorInfo) {
-        selectedListeningSensor = sensor
-        _listeningSensor.value = sensor
-    }
-
-    fun startListeningPreview() {
-        val sensor = selectedListeningSensor ?: return
-        listenJob?.cancel()
-        _listeningIsRunning.value = true
-        _listeningStatus.value = "监听中"
-        listenJob = viewModelScope.launch {
-            repository.observeSensor(sensor.type, prefs.getSamplingPeriod()).collect { data ->
-                val buffer = (_listeningData.value + data).takeLast(300)
-                _listeningData.value = buffer
-                _listeningStatus.value = "监听中 · ${buffer.size} 条"
-            }
-        }
-    }
-
-    fun pauseListeningPreview() {
-        listenJob?.cancel()
-        listenJob = null
-        _listeningIsRunning.value = false
-        _listeningStatus.value = "已暂停"
-    }
-
-    fun stopListeningPreview() {
-        listenJob?.cancel()
-        listenJob = null
-        _listeningIsRunning.value = false
-        _listeningData.value = emptyList()
-        _listeningStatus.value = "未监听"
     }
 
     fun startRecordingWithCountdown(sensor: SensorInfo, countdownSeconds: Int = 0) {
@@ -243,11 +194,6 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
         ExportManager.shareFile(getApplication(), file, mime)
     }
 
-    fun openExportFolder() {
-        val file = _exportFile.value ?: return
-        ExportManager.openExportDirectory(getApplication(), file)
-    }
-
     fun clearExport() {
         _exportFile.value = null
     }
@@ -256,6 +202,5 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
         super.onCleared()
         SensorRecordingService.onRecordCallback = null
         SensorRecordingService.onStopCallback = null
-        listenJob?.cancel()
     }
 }

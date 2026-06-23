@@ -45,6 +45,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import com.sensortools.data.model.SensorInfo
 import com.sensortools.domain.HealthAnalyzer
 import com.sensortools.ui.components.SensorChart
@@ -62,8 +64,10 @@ private data class SensorGroup(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RecordScreen(
+    preselectedSensorType: Int? = null,
     viewModel: RecordViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     val isRecording by viewModel.isRecording.collectAsState()
     val recordCount by viewModel.recordCount.collectAsState()
     val duration by viewModel.duration.collectAsState()
@@ -90,6 +94,15 @@ fun RecordScreen(
 
     LaunchedEffect(selectedSensor) {
         selectedSensor?.let { viewModel.selectSensor(it) }
+    }
+
+    LaunchedEffect(preselectedSensorType, sensors, groupedSensors) {
+        val type = preselectedSensorType ?: return@LaunchedEffect
+        val sensor = sensors.find { it.type == type } ?: return@LaunchedEffect
+        selectedSensor = sensor
+        groupedSensors.find { group -> group.sensors.any { it.type == type } }
+            ?.title
+            ?.let { expandedGroups[it] = true }
     }
 
     if (showCountdownPicker) {
@@ -355,7 +368,11 @@ fun RecordScreen(
                         Text("${recordCount} 条记录", style = MaterialTheme.typography.labelSmall, color = TextTertiary)
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             OutlinedButton(
-                                onClick = { viewModel.shareFile() },
+                                onClick = {
+                                    if (!viewModel.shareFile()) {
+                                        Toast.makeText(context, "无法分享，请确认已安装可用应用", Toast.LENGTH_SHORT).show()
+                                    }
+                                },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(10.dp),
                                 border = BorderStroke(1.dp, TextSecondary)
@@ -374,7 +391,16 @@ fun RecordScreen(
                             }
                         }
                         OutlinedButton(
-                            onClick = { viewModel.openExportFolder() },
+                            onClick = {
+                                if (!viewModel.openExportFolder()) {
+                                    val path = file?.parentFile?.absolutePath.orEmpty()
+                                    Toast.makeText(
+                                        context,
+                                        if (path.isNotBlank()) "已保存至：$path" else "无法打开文件管理器",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
                             border = BorderStroke(1.dp, StatusNormal)

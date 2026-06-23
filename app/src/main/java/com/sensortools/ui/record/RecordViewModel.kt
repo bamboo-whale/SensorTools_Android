@@ -237,15 +237,15 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun shareFile() {
-        val file = _exportFile.value ?: return
+    fun shareFile(): Boolean {
+        val file = _exportFile.value ?: return false
         val mime = if (file.extension == "csv") "text/csv" else "application/json"
-        ExportManager.shareFile(getApplication(), file, mime)
+        return ExportManager.shareFile(getApplication(), file, mime)
     }
 
-    fun openExportFolder() {
-        val file = _exportFile.value ?: return
-        ExportManager.openExportDirectory(getApplication(), file)
+    fun openExportFolder(): Boolean {
+        val file = _exportFile.value ?: return false
+        return ExportManager.openExportDirectory(getApplication(), file)
     }
 
     fun clearExport() {

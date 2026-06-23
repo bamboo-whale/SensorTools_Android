@@ -123,13 +123,31 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         elapsedMs = elapsed
                     )
 
-                    // 状态分类（每 10 个样本更新）
-                    if (sampleCount % 10 == 0 && buffer.size >= 10) {
-                        val recent = buffer.takeLast(50)
-                        _statusLabel.value = SensorClassifier.classify(activeSensorType, recent)
+                    // 状态分类：慢速传感器每样本更新，快速传感器每 10 个样本更新
+                    val statusInterval = statusUpdateInterval(activeSensorType)
+                    if (sampleCount % statusInterval == 0 && buffer.isNotEmpty()) {
+                        val window = statusSampleWindow(activeSensorType, buffer.size)
+                        _statusLabel.value = SensorClassifier.classify(activeSensorType, buffer.takeLast(window))
                     }
                 }
         }
+    }
+
+    private fun statusUpdateInterval(sensorType: Int): Int = when (sensorType) {
+        Sensor.TYPE_LIGHT,
+        Sensor.TYPE_PROXIMITY,
+        Sensor.TYPE_PRESSURE,
+        Sensor.TYPE_AMBIENT_TEMPERATURE,
+        Sensor.TYPE_RELATIVE_HUMIDITY,
+        Sensor.TYPE_HEART_RATE,
+        Sensor.TYPE_STEP_COUNTER -> 1
+        else -> 10
+    }
+
+    private fun statusSampleWindow(sensorType: Int, bufferSize: Int): Int = when (sensorType) {
+        Sensor.TYPE_LIGHT,
+        Sensor.TYPE_PROXIMITY -> minOf(10, bufferSize)
+        else -> minOf(50, bufferSize)
     }
 
     fun pauseListening() {

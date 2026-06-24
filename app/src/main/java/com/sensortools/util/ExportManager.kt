@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Environment
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -167,38 +166,19 @@ object ExportManager {
 
     fun openExportDirectory(context: Context, file: File): Boolean {
         if (!file.exists()) return false
-        if (openExportedFile(context, file)) return true
-        return openDocumentsFolder(context)
+        val dir = file.parentFile ?: return false
+        return tryOpenDirectory(context, dir)
     }
 
-    private fun openExportedFile(context: Context, file: File): Boolean {
+    private fun tryOpenDirectory(context: Context, dir: File): Boolean {
         return try {
-            val uri = fileProviderUri(context, file)
+            val uri = fileProviderUri(context, dir)
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, mimeTypeFor(file))
+                setDataAndType(uri, "resource/folder")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(Intent.createChooser(intent, "打开保存位置"))
-            true
-        } catch (_: ActivityNotFoundException) {
-            false
-        } catch (_: Exception) {
-            false
-        }
-    }
-
-    private fun openDocumentsFolder(context: Context): Boolean {
-        return try {
-            val folderUri = (
-                "content://com.android.externalstorage.documents/document/" +
-                    "primary:Android/data/${context.packageName}/files/Documents"
-                ).toUri()
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(folderUri, "vnd.android.document/directory")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(intent)
             true
         } catch (_: ActivityNotFoundException) {
             false

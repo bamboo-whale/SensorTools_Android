@@ -44,6 +44,12 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     data object Health : Screen("health", "健康", Icons.Filled.HealthAndSafety)
     data object Record : Screen("record", "数据", Icons.Filled.SaveAlt)
     data object Tools : Screen("tools", "工具", Icons.Filled.Build)
+
+    companion object {
+        const val RECORD_ROUTE = "record?sensorType={sensorType}"
+
+        fun recordRoute(sensorType: Int = -1): String = "record?sensorType=$sensorType"
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,12 +86,17 @@ fun NavGraph() {
                     val currentRoute = navBackStackEntry?.destination?.route
 
                     listOf(Screen.Home, Screen.Calibration, Screen.Health, Screen.Record, Screen.Tools).forEach { screen ->
-                        val selected = currentRoute == screen.route
+                        val selected = currentRoute?.startsWith(screen.route) == true
                         NavigationBarItem(
                             selected = selected,
                             onClick = {
-                                if (currentRoute != screen.route) {
-                                    navController.navigate(screen.route) {
+                                val targetRoute = if (screen == Screen.Record) {
+                                    Screen.recordRoute()
+                                } else {
+                                    screen.route
+                                }
+                                if (currentRoute?.startsWith(screen.route) != true) {
+                                    navController.navigate(targetRoute) {
                                         popUpTo(Screen.Home.route) { saveState = true }
                                         launchSingleTop = true
                                         restoreState = true
@@ -125,14 +136,32 @@ fun NavGraph() {
                         DetailScreen(
                             sensorInfo = sensorInfo,
                             onBack = { navController.popBackStack() },
-                            onRecord = { navController.navigate(Screen.Record.route) }
+                            onRecord = {
+                                navController.navigate(Screen.recordRoute(sensorInfo.type)) {
+                                    popUpTo(Screen.Home.route) { saveState = true }
+                                    launchSingleTop = true
+                                }
+                            }
                         )
                     }
                 }
 
                 composable(Screen.Calibration.route) { CalibrationScreen() }
                 composable(Screen.Health.route) { HealthScreen() }
-                composable(Screen.Record.route) { RecordScreen() }
+                composable(
+                    route = Screen.RECORD_ROUTE,
+                    arguments = listOf(
+                        navArgument("sensorType") {
+                            type = NavType.IntType
+                            defaultValue = -1
+                        }
+                    )
+                ) { entry ->
+                    val sensorType = entry.arguments?.getInt("sensorType") ?: -1
+                    RecordScreen(
+                        preselectedSensorType = sensorType.takeIf { it >= 0 }
+                    )
+                }
                 composable(Screen.Tools.route) { ToolsScreen() }
 
                 composable("settings") {

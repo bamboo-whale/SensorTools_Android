@@ -8,9 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat
-import com.sensortools.data.local.PreferencesManager
 import com.sensortools.ui.navigation.NavGraph
 import com.sensortools.ui.theme.SensorToolsTheme
 
@@ -33,12 +31,8 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val prefs = PreferencesManager(this)
-
         setContent {
-            var isDark by remember { mutableStateOf(prefs.isDarkTheme()) }
-
-            SensorToolsTheme(darkTheme = isDark) {
+            SensorToolsTheme {
                 NavGraph()
             }
         }

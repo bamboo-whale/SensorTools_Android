@@ -47,12 +47,6 @@ class PreferencesManager(context: Context) {
             .apply()
     }
 
-    // ── 主题 ──
-    fun isDarkTheme(): Boolean = themePrefs.getBoolean("dark_theme", true)
-    fun setDarkTheme(dark: Boolean) {
-        themePrefs.edit().putBoolean("dark_theme", dark).apply()
-    }
-
     // ── 采样率 ──
     fun getSamplingPeriod(): Int = themePrefs.getInt("sampling_period", SensorManager.SENSOR_DELAY_GAME)
     fun setSamplingPeriod(period: Int) {

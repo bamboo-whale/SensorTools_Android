@@ -59,12 +59,11 @@ fun NavGraph() {
     val context = LocalContext.current
     val prefs = remember { PreferencesManager(context) }
 
-    var isDark by remember { mutableStateOf(prefs.isDarkTheme()) }
     var showIntro by remember { mutableStateOf(prefs.isFirstLaunch()) }
 
     // Intro overlay
     if (showIntro) {
-        SensorToolsTheme(darkTheme = isDark) {
+        SensorToolsTheme {
             IntroScreen(onDone = {
                 prefs.setFirstLaunchDone()
                 showIntro = false
@@ -73,7 +72,7 @@ fun NavGraph() {
         return
     }
 
-    SensorToolsTheme(darkTheme = isDark) {
+    SensorToolsTheme {
         Scaffold(
             containerColor = Background,
             bottomBar = {
@@ -138,7 +137,6 @@ fun NavGraph() {
                             onBack = { navController.popBackStack() },
                             onRecord = {
                                 navController.navigate(Screen.recordRoute(sensorInfo.type)) {
-                                    popUpTo(Screen.Home.route) { saveState = true }
                                     launchSingleTop = true
                                 }
                             }
@@ -166,8 +164,6 @@ fun NavGraph() {
 
                 composable("settings") {
                     SettingsScreen(
-                        isDarkTheme = isDark,
-                        onThemeChange = { isDark = it },
                         onBack = { navController.popBackStack() }
                     )
                 }

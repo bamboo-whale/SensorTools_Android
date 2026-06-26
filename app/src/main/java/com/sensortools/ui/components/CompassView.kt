@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -84,8 +83,8 @@ fun CompassView(
                 for (deg in 0 until 360 step 5) {
                     val rotatedDeg = deg - smoothAzimuth.toInt()
                     val rad = Math.toRadians(rotatedDeg.toDouble())
-                    val cosA = cos(rad).toFloat()
-                    val sinA = sin(rad).toFloat()
+                    val xFactor = sin(rad).toFloat()
+                    val yFactor = -cos(rad).toFloat()
 
                     val isCardinal = deg % 90 == 0
                     val isMajor = deg % 30 == 0
@@ -96,8 +95,8 @@ fun CompassView(
                         color = if (isCardinal) TextPrimary
                                 else if (isMajor) TextSecondary
                                 else BorderLight,
-                        start = Offset(cx + cosA * innerR, cy + sinA * innerR),
-                        end = Offset(cx + cosA * outerR, cy + sinA * outerR),
+                        start = Offset(cx + xFactor * innerR, cy + yFactor * innerR),
+                        end = Offset(cx + xFactor * outerR, cy + yFactor * outerR),
                         strokeWidth = if (isCardinal) 2.5f else if (isMajor) 2f else 1f
                     )
 
@@ -111,14 +110,14 @@ fun CompassView(
                             else -> ""
                         }
                         val labelR = r * 0.52f
-                        val lx = cx + cosA * labelR
-                        val ly = cy + sinA * labelR + 10f
+                        val lx = cx + xFactor * labelR
+                        val ly = cy + yFactor * labelR + 10f
                         drawContext.canvas.nativeCanvas.drawText(label, lx, ly, textPaintBold)
                     } else if (isMajor) {
                         val label = "${deg}°"
                         val labelR = r * 0.57f
-                        val lx = cx + cosA * labelR
-                        val ly = cy + sinA * labelR + 10f
+                        val lx = cx + xFactor * labelR
+                        val ly = cy + yFactor * labelR + 10f
                         drawContext.canvas.nativeCanvas.drawText(label, lx, ly, textPaint)
                     }
                 }

@@ -289,22 +289,21 @@ fun ControlButtonRow(
         if (onRecord != null) {
             OutlinedButton(
                 onClick = onRecord,
-                enabled = isRunning,
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(10.dp),
                 border = androidx.compose.foundation.BorderStroke(
                     1.dp,
-                    if (isRunning) StatusError else Border
+                    StatusError
                 )
             ) {
                 Icon(
                     Icons.Filled.FiberManualRecord,
                     null,
-                    tint = if (isRunning) StatusError else TextTertiary,
+                    tint = StatusError,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                Text("去录制", color = if (isRunning) StatusError else TextTertiary)
+                Text("去录制", color = StatusError)
             }
         }
 

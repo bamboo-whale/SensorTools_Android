@@ -1,0 +1,8 @@
+{
+  "tag_name": "v1.0.4",
+  "name": "SensorTools v1.0.4",
+  "body": "This release fixes the compass direction labels so north, east, south, and west align with the correct screen positions.\n\nUpdates:\n- fix compass dial coordinate mapping for N/E/S/W labels\n- keep azimuth direction text logic unchanged\n- refresh release APK for version 1.0.4",
+  "draft": false,
+  "prerelease": false,
+  "generate_release_notes": false
+}

@@ -32,8 +32,8 @@ android {
         applicationId = "com.sensortools"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.3"
+        versionCode = 4
+        versionName = "1.0.4"
 
         vectorDrawables {
             useSupportLibrary = true
